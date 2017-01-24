@@ -1,0 +1,22 @@
+{
+    "name": "lokhman/silex-console",
+    "type": "library",
+    "description": "Silex 2.0+ console application",
+    "keywords": ["silex", "console"],
+    "license": "MIT",
+    "authors": [{
+        "name": "Alexander Lokhman",
+        "email": "alex.lokhman@gmail.com"
+    }],
+    "autoload": {
+        "psr-4": { "Lokhman\\Silex\\": "src/Silex" }
+    },
+    "require": {
+        "silex/silex": "~2.0",
+        "symfony/console": "^3.2"
+    },
+    "suggest": {
+        "doctrine/dbal": "For using Doctrine service provider",
+        "doctrine/migrations": "For using Doctrine Migrations service provider"
+    }
+}
