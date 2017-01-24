@@ -2,7 +2,7 @@
     "name": "lokhman/silex-console",
     "type": "library",
     "description": "Silex 2.0+ console application",
-    "keywords": ["silex", "console"],
+    "keywords": ["silex", "tools", "console"],
     "license": "MIT",
     "authors": [{
         "name": "Alexander Lokhman",
