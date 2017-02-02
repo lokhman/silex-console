@@ -29,6 +29,7 @@
 namespace Lokhman\Silex\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -47,7 +48,8 @@ class SessionSchemaCreateCommand extends Command {
     protected function configure() {
         $this
             ->setName('session:schema:create')
-            ->setDescription('Creates database schema for PDO session handler');
+            ->setDescription('Creates database schema for PDO session handler')
+            ->addOption('no-errors', null, InputOption::VALUE_NONE, 'Supresses runtime errors');
     }
 
     /**
@@ -60,8 +62,15 @@ class SessionSchemaCreateCommand extends Command {
             throw new \RuntimeException('Parameter "session.storage.handler" must be instance of PdoSessionHandler.');
         }
 
-        $app['session.storage.handler']->createTable();
-        $output->writeln('<info>Session schema was created.</info>');
+        try {
+            $app['session.storage.handler']->createTable();
+            $output->writeln('<info>Session schema was created.</info>');
+        } catch (\RuntimeException $ex) {
+            $output->writeln('<comment>Session schema was not created.</comment>');
+            if (!$input->getOption('no-errors')) {
+                throw $ex;
+            }
+        }
     }
 
 }
