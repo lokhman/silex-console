@@ -29,7 +29,7 @@
 namespace Lokhman\Silex\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -41,41 +41,92 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CacheClearCommand extends Command {
 
-    protected static $TARGETS = [
-        'apcu',
-    ];
-
     /**
      * {@inheritdoc}
      */
     protected function configure() {
+        foreach ((new \ReflectionClass($this))->getMethods() as $method) {
+            if ($method->class == self::class || is_subclass_of($method->class, self::class)) {
+                if (strpos($method->name, '_') === 0) {
+                    $targets[] = substr($method->name, 1);
+                }
+            }
+        }
+        sort($targets);
+
         $this
             ->setName('cache:clear')
             ->setDescription('Clears cache')
-            ->addArgument('targets', InputArgument::IS_ARRAY, 'Target cache to clear');
+            ->addOption('target', 't', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Target cache to clear', $targets);
     }
 
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $targets = $input->getArgument('targets') ? : static::$TARGETS;
-        if ($unknown = array_diff($targets, static::$TARGETS)) {
-            $output->writeln(sprintf('<error>Unknown target "%s"</error>', $unknown[0]));
-            return;
-        }
-
-        foreach (array_unique($targets) as $target) {
-            call_user_func([$this, '_'.$target], $input, $output);
+        foreach ($input->getOption('target') as $target) {
+            if (method_exists($this, '_' . $target)) {
+                call_user_func([$this, '_' . $target], $input, $output);
+            } else {
+                $output->writeln(sprintf('<error>Unknown target "%s"</error>', $target));
+                return;
+            }
         }
 
         $output->writeln('<info>Cache cleared<info>');
     }
 
-    protected function _apcu() {
-        if (function_exists('apcu_clear_cache')) {
-            apcu_clear_cache();
+    /**
+     * @see \Symfony\Component\Filesystem\Filesystem
+     */
+    private function fsEmpty($path) {
+        $iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+        foreach (new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST) as $fileInfo) {
+            $file = $fileInfo->getPathname();
+            if (is_link($file)) {
+                if (!@(unlink($file) || '\\' !== DIRECTORY_SEPARATOR || rmdir($file)) && file_exists($file)) {
+                    $error = error_get_last();
+                    throw new \RuntimeException(sprintf('Failed to remove symlink "%s": %s.', $file, $error['message']));
+                }
+            } elseif (is_dir($file)) {
+                if (!@rmdir($file) && file_exists($file)) {
+                    $error = error_get_last();
+                    throw new \RuntimeException(sprintf('Failed to remove directory "%s": %s.', $file, $error['message']));
+                }
+            } elseif (!@unlink($file) && file_exists($file)) {
+                $error = error_get_last();
+                throw new \RuntimeException(sprintf('Failed to remove file "%s": %s.', $file, $error['message']));
+            }
         }
+    }
+
+    private function _apc(InputInterface $input, OutputInterface $output) {
+        if (!function_exists('apc_clear_cache')) {
+            return;
+        }
+
+        apc_clear_cache();
+        $output->writeln('<comment>APC cache cleared</comment>');
+    }
+
+    private function _apcu(InputInterface $input, OutputInterface $output) {
+        if (!function_exists('apcu_clear_cache')) {
+            return;
+        }
+
+        apcu_clear_cache();
+        $output->writeln('<comment>APCu cache cleared</comment>');
+    }
+
+    private function _twig(InputInterface $input, OutputInterface $output) {
+        $app = $this->getApplication()->getContainer();
+        if (!isset($app['twig.options']['cache'])) {
+            return;
+        }
+
+        $this->fsEmpty($app['twig.options']['cache']);
+        $output->writeln('<comment>Twig cache cleared</comment>');
     }
 
 }
