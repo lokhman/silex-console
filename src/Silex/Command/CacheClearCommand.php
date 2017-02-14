@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-namespace Lokhman\Silex\Console\Command;
+namespace Lokhman\Silex\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
