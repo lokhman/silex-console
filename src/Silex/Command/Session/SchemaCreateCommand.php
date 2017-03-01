@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-namespace Lokhman\Silex\Command;
+namespace Lokhman\Silex\Command\Session;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
  * @link https://github.com/lokhman/silex-tools
  */
-class SessionSchemaCreateCommand extends Command {
+class SchemaCreateCommand extends Command {
 
     /**
      * {@inheritdoc}

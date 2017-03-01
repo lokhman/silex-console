@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-namespace Lokhman\Silex\Command;
+namespace Lokhman\Silex\Command\Cache;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -39,7 +39,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
  * @link https://github.com/lokhman/silex-tools
  */
-class CacheClearCommand extends Command {
+class ClearCommand extends Command {
 
     /**
      * {@inheritdoc}

@@ -35,7 +35,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Lokhman\Silex\Console\Provider\AbstractServiceProvider;
-use Lokhman\Silex\Command as Commands;
 
 /**
  * Silex console application.
@@ -88,7 +87,7 @@ class Console extends BaseConsole {
             $output->getFormatter()->setStyle('env', $style);
             $formatter = $this->getHelperSet()->get('formatter');
             $output->writeln([
-                $formatter->formatBlock('Environment: '.$env, 'env', true),
+                $formatter->formatBlock('Environment: ' . $env, 'env', true),
                 '',  // new line after info block
             ]);
         }
@@ -105,8 +104,9 @@ class Console extends BaseConsole {
      */
     public function getDefaultCommands() {
         $commands = parent::getDefaultCommands();
-        $commands[] = new Commands\CacheClearCommand();
-        $commands[] = new Commands\SessionSchemaCreateCommand();
+        $commands[] = new Command\Cache\ClearCommand();
+        $commands[] = new Command\Session\SchemaCreateCommand();
+
         return $commands;
     }
 
@@ -115,10 +115,12 @@ class Console extends BaseConsole {
      */
     public function getDefaultInputDefinition() {
         $inputDefinition = parent::getDefaultInputDefinition();
+
         if (isset($this->container['config'])) {
             $inputDefinition->addOption(new InputOption('env', 'e',
                 InputOption::VALUE_REQUIRED, 'Configuration environment'));
         }
+
         return $inputDefinition;
     }
 
