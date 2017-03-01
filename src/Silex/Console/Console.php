@@ -35,6 +35,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Lokhman\Silex\Console\Provider\AbstractServiceProvider;
+use Lokhman\Silex\Command as Commands;
 
 /**
  * Silex console application.
@@ -104,8 +105,8 @@ class Console extends BaseConsole {
      */
     public function getDefaultCommands() {
         $commands = parent::getDefaultCommands();
-        $commands[] = new Command\Cache\ClearCommand();
-        $commands[] = new Command\Session\SchemaCreateCommand();
+        $commands[] = new Commands\Cache\ClearCommand();
+        $commands[] = new Commands\Session\SchemaCreateCommand();
 
         return $commands;
     }
