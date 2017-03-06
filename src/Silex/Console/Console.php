@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -28,23 +29,24 @@
 
 namespace Lokhman\Silex\Console;
 
+use Lokhman\Silex\Command as Commands;
+use Lokhman\Silex\Console\Provider\AbstractServiceProvider;
 use Silex\Application;
 use Symfony\Component\Console\Application as BaseConsole;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Lokhman\Silex\Console\Provider\AbstractServiceProvider;
-use Lokhman\Silex\Command as Commands;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Silex console application.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-class Console extends BaseConsole {
-
+class Console extends BaseConsole
+{
     /**
      * @var Application
      */
@@ -54,10 +56,11 @@ class Console extends BaseConsole {
      * Constructor.
      *
      * @param Application $container Container application
-     * @param string $name           The name of the application
-     * @param string $version        The version of the application
+     * @param string      $name      The name of the application
+     * @param string      $version   The version of the application
      */
-    public function __construct(Application $container, $name = 'UNKNOWN', $version = 'UNKNOWN') {
+    public function __construct(Application $container, $name = 'UNKNOWN', $version = 'UNKNOWN')
+    {
         set_time_limit(0);  // unset maximum execution time for CLI
         $this->container = $container;
         parent::__construct($name, $version);
@@ -68,14 +71,16 @@ class Console extends BaseConsole {
      *
      * @return Application
      */
-    public function getContainer() {
+    public function getContainer()
+    {
         return $this->container;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function doRun(InputInterface $input, OutputInterface $output) {
+    public function doRun(InputInterface $input, OutputInterface $output)
+    {
         // if ConfigServiceProvider is enabled
         if (isset($this->container['config'])) {
             $env = $this->container['config.env.default'];
@@ -88,7 +93,7 @@ class Console extends BaseConsole {
             $output->getFormatter()->setStyle('env', $style);
             $formatter = $this->getHelperSet()->get('formatter');
             $output->writeln([
-                $formatter->formatBlock('Environment: ' . $env, 'env', true),
+                $formatter->formatBlock('Environment: '.$env, 'env', true),
                 '',  // new line after info block
             ]);
         }
@@ -103,7 +108,8 @@ class Console extends BaseConsole {
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCommands() {
+    public function getDefaultCommands()
+    {
         $commands = parent::getDefaultCommands();
         $commands[] = new Commands\Cache\ClearCommand();
         $commands[] = new Commands\Session\SchemaCreateCommand();
@@ -114,7 +120,8 @@ class Console extends BaseConsole {
     /**
      * {@inheritdoc}
      */
-    public function getDefaultInputDefinition() {
+    public function getDefaultInputDefinition()
+    {
         $inputDefinition = parent::getDefaultInputDefinition();
 
         if (isset($this->container['config'])) {
@@ -133,9 +140,10 @@ class Console extends BaseConsole {
      *
      * @return Console
      */
-    public function registerServiceProvider(AbstractServiceProvider $provider, array $values = array()) {
+    public function registerServiceProvider(AbstractServiceProvider $provider, array $values = [])
+    {
         $this->container->register($provider->setConsole($this), $values);
+
         return $this;
     }
-
 }

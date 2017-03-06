@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -29,8 +30,8 @@
 namespace Lokhman\Silex\Command\Session;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
@@ -38,14 +39,16 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
  * Session schema console command.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-class SchemaCreateCommand extends Command {
-
+class SchemaCreateCommand extends Command
+{
     /**
      * {@inheritdoc}
      */
-    protected function configure() {
+    protected function configure()
+    {
         $this
             ->setName('session:schema:create')
             ->setDescription('Creates database schema for PDO session handler')
@@ -55,7 +58,8 @@ class SchemaCreateCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $app = $this->getApplication()->getContainer();
 
         if (!isset($app['session.storage.handler']) || !$app['session.storage.handler'] instanceof PdoSessionHandler) {
@@ -72,5 +76,4 @@ class SchemaCreateCommand extends Command {
             }
         }
     }
-
 }

@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -28,45 +29,48 @@
 
 namespace Lokhman\Silex\Console\Provider;
 
-use Pimple\Container;
-use Silex\Application;
-use Silex\Api\BootableProviderInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\OutputWriter;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Pimple\Container;
+use Silex\Api\BootableProviderInterface;
+use Silex\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * Silex service provider for Doctrine Migrations console commands.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-class DoctrineMigrationsServiceProvider extends AbstractServiceProvider implements BootableProviderInterface {
-
+class DoctrineMigrationsServiceProvider extends AbstractServiceProvider implements BootableProviderInterface
+{
     /**
      * {@inheritdoc}
      */
-    public function register(Container $app) {
+    public function register(Container $app)
+    {
         $app['migrations.output_writer'] = new OutputWriter(
-            function($message) {
+            function ($message) {
                 $output = new ConsoleOutput();
                 $output->writeln($message);
             }
         );
 
-        $app['migrations.directory']  = null;
-        $app['migrations.namespace']  = null;
-        $app['migrations.name']       = 'Migrations';
+        $app['migrations.directory'] = null;
+        $app['migrations.namespace'] = null;
+        $app['migrations.name'] = 'Migrations';
         $app['migrations.table_name'] = '_migrations';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function boot(Application $app) {
+    public function boot(Application $app)
+    {
         $commands = [
             'Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand',
             'Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand',
@@ -103,5 +107,4 @@ class DoctrineMigrationsServiceProvider extends AbstractServiceProvider implemen
             $this->getConsole()->add($command);
         }
     }
-
 }

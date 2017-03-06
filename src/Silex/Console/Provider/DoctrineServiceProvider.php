@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -28,31 +29,34 @@
 
 namespace Lokhman\Silex\Console\Provider;
 
-use Pimple\Container;
-use Silex\Application;
-use Silex\Api\BootableProviderInterface;
-use Symfony\Component\Console\Helper\HelperSet;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Pimple\Container;
+use Silex\Api\BootableProviderInterface;
+use Silex\Application;
+use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Silex service provider for Doctrine console commands.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-class DoctrineServiceProvider extends AbstractServiceProvider implements BootableProviderInterface {
-
+class DoctrineServiceProvider extends AbstractServiceProvider implements BootableProviderInterface
+{
     /**
      * {@inheritdoc}
      */
-    public function register(Container $app) {
+    public function register(Container $app)
+    {
         /* not implemented */
     }
 
     /**
      * {@inheritdoc}
      */
-    public function boot(Application $app) {
+    public function boot(Application $app)
+    {
         $commands = [
             new \Doctrine\DBAL\Tools\Console\Command\ImportCommand(),
             new \Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand(),
@@ -93,5 +97,4 @@ class DoctrineServiceProvider extends AbstractServiceProvider implements Bootabl
         $this->getConsole()->setHelperSet($helperSet);
         $this->getConsole()->addCommands($commands);
     }
-
 }

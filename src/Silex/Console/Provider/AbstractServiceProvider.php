@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -28,17 +29,18 @@
 
 namespace Lokhman\Silex\Console\Provider;
 
-use Pimple\ServiceProviderInterface;
 use Lokhman\Silex\Console\Console;
+use Pimple\ServiceProviderInterface;
 
 /**
  * AbstractServiceProvider class.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-abstract class AbstractServiceProvider implements ServiceProviderInterface {
-
+abstract class AbstractServiceProvider implements ServiceProviderInterface
+{
     /**
      * The console application.
      *
@@ -53,7 +55,8 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface {
      *
      * @return Console
      */
-    public function setConsole(Console $console) {
+    public function setConsole(Console $console)
+    {
         $this->console = $console;
 
         return $this;
@@ -64,8 +67,8 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface {
      *
      * @return Console
      */
-    public function getConsole() {
+    public function getConsole()
+    {
         return $this->console;
     }
-
 }

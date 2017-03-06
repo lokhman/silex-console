@@ -3,6 +3,7 @@
  * Tools for Silex 2+ framework.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  *
  * Copyright (c) 2016 Alexander Lokhman <alex.lokhman@gmail.com>
@@ -29,22 +30,24 @@
 namespace Lokhman\Silex\Command\Cache;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Cache clear console command.
  *
  * @author Alexander Lokhman <alex.lokhman@gmail.com>
+ *
  * @link https://github.com/lokhman/silex-tools
  */
-class ClearCommand extends Command {
-
+class ClearCommand extends Command
+{
     /**
      * {@inheritdoc}
      */
-    protected function configure() {
+    protected function configure()
+    {
         foreach ((new \ReflectionClass($this))->getMethods() as $method) {
             if ($method->class == self::class || is_subclass_of($method->class, self::class)) {
                 if (strpos($method->name, '_') === 0) {
@@ -64,12 +67,14 @@ class ClearCommand extends Command {
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         foreach ($input->getOption('target') as $target) {
-            if (method_exists($this, '_' . $target)) {
-                call_user_func([$this, '_' . $target], $input, $output);
+            if (method_exists($this, '_'.$target)) {
+                call_user_func([$this, '_'.$target], $input, $output);
             } else {
                 $output->writeln(sprintf('<error>Unknown target "%s"</error>', $target));
+
                 return;
             }
         }
@@ -80,7 +85,8 @@ class ClearCommand extends Command {
     /**
      * @see \Symfony\Component\Filesystem\Filesystem
      */
-    private function fsEmpty($path) {
+    private function fsEmpty($path)
+    {
         $iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
         foreach (new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST) as $fileInfo) {
             $file = $fileInfo->getPathname();
@@ -101,7 +107,8 @@ class ClearCommand extends Command {
         }
     }
 
-    private function _apc(InputInterface $input, OutputInterface $output) {
+    private function _apc(InputInterface $input, OutputInterface $output)
+    {
         if (!function_exists('apc_clear_cache')) {
             return;
         }
@@ -110,7 +117,8 @@ class ClearCommand extends Command {
         $output->writeln('<comment>APC cache cleared</comment>');
     }
 
-    private function _apcu(InputInterface $input, OutputInterface $output) {
+    private function _apcu(InputInterface $input, OutputInterface $output)
+    {
         if (!function_exists('apcu_clear_cache')) {
             return;
         }
@@ -119,7 +127,8 @@ class ClearCommand extends Command {
         $output->writeln('<comment>APCu cache cleared</comment>');
     }
 
-    private function _twig(InputInterface $input, OutputInterface $output) {
+    private function _twig(InputInterface $input, OutputInterface $output)
+    {
         $app = $this->getApplication()->getContainer();
         if (!isset($app['twig.options']['cache'])) {
             return;
@@ -128,5 +137,4 @@ class ClearCommand extends Command {
         $this->fsEmpty($app['twig.options']['cache']);
         $output->writeln('<comment>Twig cache cleared</comment>');
     }
-
 }
