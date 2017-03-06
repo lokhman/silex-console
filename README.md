@@ -1,4 +1,7 @@
 # silex-console
+
+[![StyleCI](https://styleci.io/repos/79904121/shield?branch=master)](https://styleci.io/repos/79904121)
+
 Console application for [**Silex 2.0+**](http://silex.sensiolabs.org/) micro-framework.
 
 > This project is a part of [`silex-tools`](https://github.com/lokhman/silex-tools) library.
