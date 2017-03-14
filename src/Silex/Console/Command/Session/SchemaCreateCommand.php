@@ -27,7 +27,7 @@
  * SOFTWARE.
  */
 
-namespace Lokhman\Silex\Command\Session;
+namespace Lokhman\Silex\Console\Command\Session;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

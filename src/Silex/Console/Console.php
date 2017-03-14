@@ -29,7 +29,6 @@
 
 namespace Lokhman\Silex\Console;
 
-use Lokhman\Silex\Command as Commands;
 use Lokhman\Silex\Console\Provider\AbstractServiceProvider;
 use Silex\Application;
 use Symfony\Component\Console\Application as BaseConsole;
@@ -111,8 +110,8 @@ class Console extends BaseConsole
     public function getDefaultCommands()
     {
         $commands = parent::getDefaultCommands();
-        $commands[] = new Commands\Cache\ClearCommand();
-        $commands[] = new Commands\Session\SchemaCreateCommand();
+        $commands[] = new Command\Cache\ClearCommand();
+        $commands[] = new Command\Session\SchemaCreateCommand();
 
         return $commands;
     }

@@ -27,7 +27,7 @@
  * SOFTWARE.
  */
 
-namespace Lokhman\Silex\Command\Cache;
+namespace Lokhman\Silex\Console\Command\Cache;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
