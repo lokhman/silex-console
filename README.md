@@ -23,17 +23,24 @@ register commands for [Doctrine DBAL](https://github.com/doctrine/dbal),
     use Silex\Application;
     use Silex\Provider as Providers;
     use Lokhman\Silex\Console\Console;
-    use Lokhman\Silex\Console\Provider as ConsoleProviders;
+    use Lokhman\Silex\Console\Provider as Providers;
+    use Lokhman\Silex\Console\Command as Commands;
 
     $app = new Application();
     $app->register(new Providers\DoctrineServiceProvider());
 
     $console = new Console($app);
-    $console->registerServiceProvider(new ConsoleProviders\DoctrineServiceProvider());
-    $console->registerServiceProvider(new ConsoleProviders\DoctrineMigrationsServiceProvider(), [
+
+    // register console service providers
+    $console->registerServiceProvider(new Providers\DoctrineServiceProvider());
+    $console->registerServiceProvider(new Providers\DoctrineMigrationsServiceProvider(), [
         'migrations.directory' => __DIR__ . '/../app/migrations',
         'migrations.namespace' => 'Project\Migrations',
     ]);
+
+    // add console command
+    $console->add(new Commands\Assetic\DumpCommand());
+
     $console->run();
 
 Console supports [`ConfigServiceProvider`](https://github.com/lokhman/silex-config) and adds `--env` (`-e` in short)
