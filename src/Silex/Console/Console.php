@@ -107,18 +107,6 @@ class Console extends BaseConsole
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCommands()
-    {
-        $commands = parent::getDefaultCommands();
-        $commands[] = new Command\Cache\ClearCommand();
-        $commands[] = new Command\Session\SchemaCreateCommand();
-
-        return $commands;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultInputDefinition()
     {
         $inputDefinition = parent::getDefaultInputDefinition();
