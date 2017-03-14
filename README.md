@@ -13,9 +13,7 @@ You can install `silex-console` with [Composer](http://getcomposer.org):
 
 ## <a name="documentation"></a>Documentation
 A wrapper class for [Symfony Console](https://github.com/symfony/console) application that registers console commands
-and service providers. Also supplies `DoctrineServiceProvider` and `DoctrineMigrationsServiceProvider` classes to
-register commands for [Doctrine DBAL](https://github.com/doctrine/dbal),
-[Doctrine ORM](https://github.com/doctrine/doctrine2) and [Doctrine Migrations](https://github.com/doctrine/migrations).
+and service providers.
 
     #!/usr/bin/env php
     require __DIR__ . '/../vendor/autoload.php';
@@ -23,13 +21,16 @@ register commands for [Doctrine DBAL](https://github.com/doctrine/dbal),
     use Silex\Application;
     use Silex\Provider as Providers;
     use Lokhman\Silex\Console\Console;
-    use Lokhman\Silex\Console\Provider as Providers;
     use Lokhman\Silex\Console\Command as Commands;
+    use Lokhman\Silex\Console\Provider as Providers;
 
     $app = new Application();
     $app->register(new Providers\DoctrineServiceProvider());
 
     $console = new Console($app);
+
+    // add console command
+    $console->add(new Commands\Session\SchemaCreateCommand());
 
     // register console service providers
     $console->registerServiceProvider(new Providers\DoctrineServiceProvider());
@@ -37,9 +38,6 @@ register commands for [Doctrine DBAL](https://github.com/doctrine/dbal),
         'migrations.directory' => __DIR__ . '/../app/migrations',
         'migrations.namespace' => 'Project\Migrations',
     ]);
-
-    // add console command
-    $console->add(new Commands\Assetic\DumpCommand());
 
     $console->run();
 
