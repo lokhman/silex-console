@@ -35,8 +35,8 @@ use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Process\Process;
 
 /**
@@ -57,7 +57,7 @@ class RunCommand extends Command
 
     protected $output;
     protected $tasks = [];
-    protected $state = RunCommand::STATE_RUNNING;
+    protected $state = self::STATE_RUNNING;
 
     /**
      * {@inheritdoc}
@@ -76,6 +76,7 @@ class RunCommand extends Command
     {
         if (!$this->lock()) {
             $output->writeln('<error>The command is already running in another process.</error>');
+
             return 0;
         }
 
@@ -85,9 +86,9 @@ class RunCommand extends Command
 
     protected function init(OutputInterface $output)
     {
-        declare(ticks = 1);
+        declare(ticks=1);
 
-        $signal = function() use ($output) {
+        $signal = function () use ($output) {
             $output->writeln('<comment>Cron is shutting down...</comment>');
             $this->state = RunCommand::STATE_STOPPED;
         };
@@ -142,7 +143,7 @@ class RunCommand extends Command
 
     protected function loop()
     {
-        $execute = function(Task $task) {
+        $execute = function (Task $task) {
             $output = $task->getOutput();
             $output->writeln(sprintf('<fg=black;bg=white>%s [%s]</>', date('Y-m-d H:i:s'), $task->getName()));
 
@@ -160,7 +161,7 @@ class RunCommand extends Command
                         $task->attachAsync($process);
                         $process->start();
                     } else {
-                        $process->run(function($type, $buffer) use ($output) {
+                        $process->run(function ($type, $buffer) use ($output) {
                             if ($type === Process::ERR) {
                                 $buffer = sprintf('<error>%s</error>', $buffer);
                             }
@@ -172,11 +173,11 @@ class RunCommand extends Command
 
         $this->output->writeln('<info>Starting cron...</info>');
 
-        while ($this->state != RunCommand::STATE_STOPPED) {
+        while ($this->state != self::STATE_STOPPED) {
             foreach ($this->tasks as $task) {
                 $task->queue($execute);
             }
-            usleep(RunCommand::TIMEOUT);
+            usleep(self::TIMEOUT);
         }
 
         foreach ($this->tasks as $task) {
@@ -187,7 +188,7 @@ class RunCommand extends Command
 
 class Task
 {
-    const TYPE_RAW     = 0;
+    const TYPE_RAW = 0;
     const TYPE_COMMAND = 1;
 
     protected $name;
@@ -241,26 +242,27 @@ class Task
 
     public function getRaw()
     {
-        if ($this->type !== Task::TYPE_RAW) {
-            return null;
+        if ($this->type !== self::TYPE_RAW) {
+            return;
         }
 
         $process = new Process($this->definition);
         $process->setPty(true);
+
         return $process;
     }
 
     public function setRaw($raw, $async = true)
     {
-        $this->type = Task::TYPE_RAW;
+        $this->type = self::TYPE_RAW;
         $this->definition = $raw;
         $this->async = $async;
     }
 
     public function getCommand()
     {
-        if ($this->type !== Task::TYPE_COMMAND) {
-            return null;
+        if ($this->type !== self::TYPE_COMMAND) {
+            return;
         }
 
         return $this->definition;
@@ -268,7 +270,7 @@ class Task
 
     public function setCommand($command, array $arguments = [])
     {
-        $this->type = Task::TYPE_COMMAND;
+        $this->type = self::TYPE_COMMAND;
         $arguments['command'] = $command;
         $this->definition = new ArrayInput($arguments);
     }
