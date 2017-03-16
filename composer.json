@@ -17,6 +17,7 @@
         "symfony/process": "^3.2"
     },
     "suggest": {
+        "ext-pcntl": "For process control in cron",
         "doctrine/dbal": "For using Doctrine service provider",
         "doctrine/migrations": "For using Doctrine Migrations service provider",
         "mtdowling/cron-expression": "For using cron commands"
