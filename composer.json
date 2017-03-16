@@ -13,10 +13,12 @@
     },
     "require": {
         "silex/silex": "~2.0",
-        "symfony/console": "^3.2"
+        "symfony/console": "^3.2",
+        "symfony/process": "^3.2"
     },
     "suggest": {
         "doctrine/dbal": "For using Doctrine service provider",
-        "doctrine/migrations": "For using Doctrine Migrations service provider"
+        "doctrine/migrations": "For using Doctrine Migrations service provider",
+        "mtdowling/cron-expression": "For using cron commands"
     }
 }
