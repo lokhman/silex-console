@@ -66,6 +66,7 @@ class TasksCommand extends Command
 
         if (!isset($app['cron'])) {
             $output->writeln('<comment>No cron tasks registered.</comment>');
+
             return;
         }
 
