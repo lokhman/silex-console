@@ -313,6 +313,15 @@ class Task
         }
 
         $this->nextTimestamp = $next;
-        $callback($this);
+
+        try {
+            $callback($this);
+        } catch (\Exception $ex) {
+            $this->output->writeln(sprintf('<error>%s in %s:%s</error>', $ex->getMessage(), $ex->getFile(), $ex->getLine()));
+
+            if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                $this->output->writeln(sprintf('<error>%s</error>', $ex->getTraceAsString()));
+            }
+        }
     }
 }
