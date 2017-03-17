@@ -50,7 +50,7 @@ class RunCommand extends Command
 {
     use LockableTrait;
 
-    const TIMEOUT = 500 * 1000;  // 500 msec
+    const TIMEOUT = 500000;  // 500 msec
 
     const STATE_STOPPED = 0;
     const STATE_RUNNING = 1;
